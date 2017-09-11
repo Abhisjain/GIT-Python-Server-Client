@@ -6,7 +6,7 @@ import threading
 from threading import Thread
 import tkinter as tk
 from tkinter import ttk
-
+import queue
 
 # from SocketServer import ThreadingMixIn
 
@@ -21,10 +21,12 @@ class ServerThread(Thread):
 
         while True:
             #starttime = time.time()
-            command = input(" Enter command: ")
+            #command = input(" Enter command: ")
+            command=q.get()
             self.socket.send(command.encode())
             ack = self.socket.recv(BUFFER_SIZE)
             print(ack.decode())
+
 
 class ServerThreadread(Thread):
     def __init__(self, socket):
@@ -50,6 +52,7 @@ TCP_PORT = 5002  # int(sys.argv[2])
 TCP_PORT2 = 50000
 BUFFER_SIZE = 1024
 threads = []
+q = queue.Queue()
 global log
 log = 0
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -107,7 +110,8 @@ class clientchatwindows():
         print(printlistbox)
     def gettext(self):
         gettextchatreceive=self.chatreceive.get()
-        print(gettextchatreceive)
+        q.put(gettextchatreceive)
+        #print(gettextchatreceive)
 
 
 class clientcode():                                         # t
