@@ -7,14 +7,13 @@ from threading import Thread
 import tkinter as tk
 from tkinter import ttk
 import queue
-
+import Credentialsmatch as cm
 # from SocketServer import ThreadingMixIn
 
 class ServerThread(Thread):
     def __init__(self, socket):
         Thread.__init__(self)
         self.socket = socket
-
 
     def run(self):
         print("send")
@@ -63,7 +62,8 @@ count = [1, 2, 3]
 status = 0
 class clientchatwindows():
 
-    def code(self):
+    def code(self,usernamein):
+        self.deleteofflineuser=usernamein
         print("runfunction")
         self.clientwin = tk.Tk()
         self.clientwin.title("Chat")
@@ -101,10 +101,13 @@ class clientchatwindows():
         #   print "New thread started for write"
         print("mainloop")
         self.clientwin.mainloop()
+        self.clientwin.protocol('WM_DELETE_WINDOW', self.closesecond)
     def closesecond(self):
+
+        CLOSEWINDOW=cm.matchcredentials()
+        CLOSEWINDOW.deleteofflineusers(self.deleteofflineuser)     # self.deleteofflineuser is passed in this class when stating this client gui thread
         self.clientwin.destroy()
         self.clientwin.quit()
-
     def get(self):
         printlistbox = self.listbox.get('active')
         print(printlistbox)
@@ -112,10 +115,14 @@ class clientchatwindows():
         gettextchatreceive=self.chatreceive.get()
         q.put(gettextchatreceive)
         #print(gettextchatreceive)
+    def _quit(self):
+        self.clientwin.quit()
+        self.clientwin.destroy()
+        exit()
 
 
 class clientcode():                                         # t
-    def clientcodemain(self,usernamein,passwordin):
+    def clientcodemain(self,usernamein,passwordin):    #username and password received from Login after the credentials matched by credentialsmatch
         #status = 0
         #while status == 0:
             number = 0
@@ -153,7 +160,7 @@ class clientcode():                                         # t
                     threads.append(newthread)
                     threads.append(newthread2)
                     newmethod = clientchatwindows()
-                    t = Thread(target=newmethod.code())
+                    t = Thread(target=newmethod.code(username))
                     t.start()
                     while True:
                         for t in threads:
