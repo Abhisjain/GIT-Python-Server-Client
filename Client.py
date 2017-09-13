@@ -89,10 +89,18 @@ class clientchatwindows():
         loginscroll = tk.Scrollbar(self.clientwin)
         self.listbox = tk.Listbox(self.clientwin)
         self.listbox.grid(column=0, row=1)
-        for i in range(100):
+        # function that adds users who are online
+        getonlineusers=cm.matchcredentials()
+        v=getonlineusers.getonlineusers()  # function return list of users who are online
+        for i in v:
+            print(i[0])
             self.listbox.insert(tk.END, i)
         self.listbox.config(yscrollcommand=loginscroll.set)
         loginscroll.config(command=self.listbox.yview)
+        sendto=tk.StringVar()
+
+        self.sendtowindow=ttk.Entry(self.clientwin, textvariable=sendto) # entry widget getting the name to send chat to
+        self.sendtowindow.grid(column=2, row=1)
 
         # ----------------------------------------------------------------------
 
@@ -110,10 +118,13 @@ class clientchatwindows():
         self.clientwin.quit()
     def get(self):
         printlistbox = self.listbox.get('active')
+        self.sendtowindow.insert(0,printlistbox)
         print(printlistbox)
     def gettext(self):
         gettextchatreceive=self.chatreceive.get()
-        q.put(gettextchatreceive)
+        getsendtowindow=self.sendtowindow.get()
+
+        q.put(gettextchatreceive)  # putting data in queue to send data to the threading sending to server
         #print(gettextchatreceive)
     def _quit(self):
         self.clientwin.quit()

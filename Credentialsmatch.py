@@ -40,7 +40,7 @@ class matchcredentials(object):
         cursor.execute("use login")
         cursor.execute("select username from onlineusers")
         x=cursor.fetchall()
-        print(len(x))
+        return x
         conn2.close()
 # Function to delete users who went offline
     def deleteofflineusers(self,usernamein):
@@ -56,3 +56,4 @@ class matchcredentials(object):
         conn3.commit()
         conn3.close()
         return
+
