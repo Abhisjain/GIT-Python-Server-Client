@@ -46,7 +46,7 @@ class ServerThreadread(Thread):
             time.sleep(5)
 
 
-TCP_IP = '127.0.0.1'  # sys.argv[1]
+TCP_IP = '54.152.237.120'  # sys.argv[1]
 TCP_PORT = 5002  # int(sys.argv[2])
 TCP_PORT2 = 50000
 BUFFER_SIZE = 1024
